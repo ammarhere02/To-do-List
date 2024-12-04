@@ -1,0 +1,358 @@
+Index: controller/listcontrol.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/controller/listcontrol.js b/controller/listcontrol.js
+new file mode 100644
+--- /dev/null	(revision 6eb1a4a47358084d95fdfc63c6994167a09f1c32)
++++ b/controller/listcontrol.js	(revision 6eb1a4a47358084d95fdfc63c6994167a09f1c32)
+@@ -0,0 +1,99 @@
++const {list} = require('../models/seeders/seeders');
++
++const express = require('express');
++
++const app = express();
++//getting lists
++express.urlencoded({extended: false});
++
++app.use(express.json());
++
++
++const getList = async (req, res) =>{
++    try
++    {
++        const findingList = await list.findAll();
++        console.log("lists are displayed")
++         res.status(200).json(findingList);
++
++    }
++    catch (e) {
++        console.error("caught in getlist" , e);
++    }
++
++}
++
++const  getListById  = async (req, res) =>{
++    try
++    {
++        const id = parseInt(req.params.id);
++        const findingById = await list.findByPk(id)
++        console.log("ID's of lists are displayed")
++
++         res.status(200).json(findingById);
++
++    }
++    catch (e) {
++        console.error("caught in getlistbyID" , e);
++    }
++}
++const postlist = async (req, res) => {
++    console.log('Working')
++        try {
++            const data = req.body;
++            const dataposted = await list.create(data);
++
++            res.status(201).json({ message: "Successfully posted the data", dataposted });
++            console.log("Data has been posted");
++        } catch (e) {
++            console.error("Error posting data:", e);
++            res.status(500).json({ error: "Failed to post data" });
++        }
++};
++
++
++const  updatelist = async (req, res) => {
++    console.log("i m before")
++    const id= parseInt(req.params.id);
++    const data = req.body;
++
++    try {
++        const [updatedData] = await list.update(data, {
++            where: {
++                list_id: id,
++            },
++            plain: true
++        });
++            res.status(200).json({"message" : "data updated successfully" , data : updatedData});
++
++    } catch (e) {
++
++        res.json({error: "Failed to update list"});
++    }
++}
++
++const deletelist = async (req, res) =>
++{
++    const id = parseInt(req.params.id);
++    try
++    {
++  await list.destroy(
++            {
++                where: {
++
++                    list_id: id,
++                }
++            },
++            res.status(200).json({"message": "Data has been deleted successfully"})
++        )
++    }
++    catch (e)
++    {
++        console.error("caught in deletelist" , e);
++    }
++}
++
++module.exports = {getList , getListById , postlist , updatelist , deletelist}
++
++
++
+Index: controller/statuscontrol.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/controller/statuscontrol.js b/controller/statuscontrol.js
+new file mode 100644
+--- /dev/null	(revision 6eb1a4a47358084d95fdfc63c6994167a09f1c32)
++++ b/controller/statuscontrol.js	(revision 6eb1a4a47358084d95fdfc63c6994167a09f1c32)
+@@ -0,0 +1,36 @@
++const express = require('express');
++const app = express();
++
++const {status} = require('../models/seeders/seeders')
++
++app.use(express.json());
++
++const  getstatus  = async (req, res)=> {
++
++    const stat = await status.findAll()
++    res.status(200).json(stat)
++    console.log(`ALL the status of the tasks are displayed`);
++}
++
++const  getstatuswithid = async (req, res)=>
++{
++
++    const id = parseInt(req.params.id);
++    const statid = await status.findByPk(id)
++    res.status(200).json(statid)
++    console.log(`The id of the task is ${id} `);
++}
++
++const updatestatus  = async (req, res)=>
++{
++
++    await status.destroy({
++
++        where: {current_status : false ,
++        }
++    })
++    res.status(200).json();
++
++}
++
++module.exports = {getstatus , getstatuswithid , updatestatus}
+Index: models/db.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/models/db.js b/models/db.js
+new file mode 100644
+--- /dev/null	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
++++ b/models/db.js	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
+@@ -0,0 +1,29 @@
++const {list , status} =  require('./seeders/seeders.js')
++
++const express = require('express')
++const app = express()
++const dbList = [
++    { list_id: 1, task_name: 'wash your hands' },
++    { list_id: 2, task_name: 'clean your house' },
++
++];
++
++for(const item of dbList)
++{
++    const dbListt =  list.create(item);
++    console.log(dbListt);
++}
++
++
++
++const db_status = [
++    { status_id: 1 , current_status: true},
++    { status_id: 2, current_status: false },
++
++];
++
++for(const stat of db_status)
++{
++    const statusmode =  status.create(stat);
++    console.log(statusmode);
++}
+Index: models/seeders/file.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/models/seeders/file.json b/models/seeders/file.json
+new file mode 100644
+--- /dev/null	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
++++ b/models/seeders/file.json	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
+@@ -0,0 +1,23 @@
++{
++  "development": {
++    "username": "root",
++    "password": "ammar12345678",
++    "database": "todolist",
++    "host": "127.0.0.1",
++    "dialect": "mysql"
++  },
++  "test": {
++    "username": "root",
++    "password": "ammar12345678",
++    "database": "todolist",
++    "host": "127.0.0.1",
++    "dialect": "mysql"
++  },
++  "production": {
++    "username": "root",
++    "password": "ammar12345678",
++    "database": "todolist",
++    "host": "127.0.0.1",
++    "dialect": "mysql"
++  }
++}
+Index: models/seeders/seeders.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/models/seeders/seeders.js b/models/seeders/seeders.js
+new file mode 100644
+--- /dev/null	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
++++ b/models/seeders/seeders.js	(revision 0939d4cca994b1e20272b6d4a458d87b385a5bdf)
+@@ -0,0 +1,56 @@
++const {Sequelize , DataTypes} = require( 'sequelize')
++
++const sequelizeConnect = new Sequelize("todolist" , "root" , "ammar12345678" ,
++    {
++        host: "127.0.0.1",
++        dialect: "mysql",
++    })
++
++sequelizeConnect.sync()
++    .then(() => {
++        console.log("Sequelize connected successfully.");
++    })
++    .catch((err) => {
++        console.error("Unable to connect to the database:", err);
++    });
++
++
++
++
++ const list = sequelizeConnect.define( "list" ,
++    {
++        list_id:
++            {
++                type: DataTypes.INTEGER,
++                primaryKey: true ,
++            },
++        task_name: {
++            type: DataTypes.STRING,
++            allowNull: true
++        }
++
++
++    })
++
++ const status = sequelizeConnect.define("status",
++    {
++
++        status_id :
++            {
++                type: DataTypes.INTEGER,
++                allowNull: true,
++                autoincrement: true,
++            },
++        current_status:
++            {
++                type: DataTypes.BOOLEAN,
++                defaultValue : true,
++                allowNull: false,
++            }
++    })
++
++list.hasOne(status)
++status.belongsTo(list)
++
++
++module.exports = {list , status}
+\ No newline at end of file
+Index: routes/list_route/list_route.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/routes/list_route/list_route.js b/routes/list_route/list_route.js
+new file mode 100644
+--- /dev/null	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
++++ b/routes/list_route/list_route.js	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
+@@ -0,0 +1,15 @@
++const express = require('express');
++const {getList , getListById  , postlist , updatelist, deletelist} = require('../../controller/listcontrol');
++express.json()
++const router1 = express.Router();
++
++/* GET home page. */
++
++router1.get('/', getList);
++router1.get('/:id', getListById)
++
++router1.post('/' , postlist);
++router1.patch('/:id' , updatelist);
++router1.delete('/:id' , deletelist);
++
++module.exports = router1;
+Index: routes/main_route.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/routes/main_route.js b/routes/main_route.js
+new file mode 100644
+--- /dev/null	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
++++ b/routes/main_route.js	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
+@@ -0,0 +1,10 @@
++const express = require('express');
++const listroute = require('../routes/list_route/list_route.js')
++const statusroute = require('../routes/status_route/status_route.js')
++
++const router = express.Router();
++
++router.use('/' , listroute)
++router.use('/' , statusroute)
++
++module.exports = router;
+\ No newline at end of file
+Index: routes/status_route/status_route.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/routes/status_route/status_route.js b/routes/status_route/status_route.js
+new file mode 100644
+--- /dev/null	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
++++ b/routes/status_route/status_route.js	(revision d03e3f6fcc1e8d846b989fa19fc7f1938216a62d)
+@@ -0,0 +1,8 @@
++const express = require('express');
++const router2 = express.Router();
++const {getstatuswithid , updatestatus} = require('../../controller/statuscontrol');
++
++router2.get('/:id/status', getstatuswithid)
++router2.delete('/:id/status/', updatestatus)
++
++module.exports = router2;
