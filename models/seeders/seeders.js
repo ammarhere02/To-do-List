@@ -53,4 +53,27 @@ list.hasOne(status)
 status.belongsTo(list)
 
 
-module.exports = {list , status}
+const user = sequelizeConnect.define("user", {
+id:
+{
+   type: DataTypes.INTEGER,
+    primaryKey: true ,
+
+},
+    name:
+        {
+            type: DataTypes.STRING,
+        },
+    email:
+        {
+            type: DataTypes.STRING,
+        },
+    password:
+        {
+            type: DataTypes.STRING,
+        }
+
+
+
+})
+module.exports = {list , status , user}
