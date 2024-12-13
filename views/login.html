@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TO-DO-LIST</title>
+
+
+    <h1>Welcome to the task-tracker APP </h1>
+
+</head>
+<style>
+body
+{
+    background-color: lightpink;
+}
+h1
+{
+text-align: center;
+    color:indianred;
+  text-end-overflow: ellipsis;
+
+}
+    form
+    {
+        margin: auto;
+        text-align: center;
+        container: center;
+        padding-top: 50px;
+        border: 3px solid black;
+    }
+    button
+    {
+
+        color: red;
+        margin: 15px 32px;
+    }
+
+
+
+</style>
+<body>
+<form method="GET" action="http://localhost:3000/lists">
+
+    <label>Email: </label>
+    <input type="email" name="email" id="email" placeholder="Enter Email" required>
+<br>
+    <label>Password: </label>
+    <input type="password" name="password" id="password" placeholder="Enter Password" required>
+<br>
+    <button type="submit">Submit</button>
+
+</form>
+
+
+<script>
+document.querySelector("form").addEventListener("submit", function(event) {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const hasalphabet = /[a-zA-Z]/.test(email);
+    const hasNumber = /[0-9]/.test(email);
+    if(password.length <6)
+    {
+        event.preventDefault();
+        alert('Password must be at least 6 characters');
+
+    }
+    else if(!hasNumber || !hasalphabet)
+    {
+        event.preventDefault();
+        alert("Please add numeric and alphabets in your email")
+
+    }
+})
+
+</script>
+</body>
+</html>

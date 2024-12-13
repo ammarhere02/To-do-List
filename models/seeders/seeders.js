@@ -54,12 +54,7 @@ status.belongsTo(list)
 
 
 const user = sequelizeConnect.define("user", {
-id:
-{
-   type: DataTypes.INTEGER,
-    primaryKey: true ,
 
-},
     name:
         {
             type: DataTypes.STRING,

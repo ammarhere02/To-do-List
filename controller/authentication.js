@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const secretKey = "$ammarkhan9090";
-const { user } = require("models/seeders/seeders");
+const { user } = require("../models/seeders/seeders");
 
 
 const signUp = async (req, res) => {
@@ -11,7 +11,6 @@ const signUp = async (req, res) => {
         if (!name || !email || !password) {
             return res.status(400).send({ error: "Missing required fields" });
         }
-
         const alreadyexists = await user.findOne({
             where: { email: email },
         });
@@ -29,7 +28,7 @@ const signUp = async (req, res) => {
         });
 
         const token = jwt.sign(
-            { id: newUser.id },
+            { email: newUser.email },
             process.env.SECRET_KEY || secretKey,
             { expiresIn: "1h" }
         );
@@ -38,7 +37,6 @@ const signUp = async (req, res) => {
             message: "User registered successfully",
             user: {
                 name: newUser.name,
-                id: newUser.id,
                 email: newUser.email,
             },
             token,
@@ -58,8 +56,9 @@ const signIn = async (req, res) => {
 
         const seeuser = await user.findOne({
             where: { email: email },
-        });
-
+        }
+        );
+        console.log("i m after checkingn email")
         if (!seeuser) {
             return res.status(400).send({ error: "Email not found" });
         }
@@ -71,7 +70,7 @@ const signIn = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: seeuser.id },
+            { email: seeuser.email },
             secretKey,
             { expiresIn: "1h" }
         );
@@ -80,7 +79,6 @@ const signIn = async (req, res) => {
             message: "User logged in successfully",
             user: {
                 name: seeuser.name,
-                id: seeuser.id,
                 email: seeuser.email,
             },
             token,

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-up</title>
+
+    <h1>Welcome to the task-tracker APP </h1>
+
+
+</head>
+
+<style>
+table, tr , th, td {
+    border: 5px solid black;
+}
+
+    body
+    {
+        background-color: lightpink;
+    }
+    h1
+    {
+        text-align: center;
+        color:indianred;
+        text-end-overflow: ellipsis;
+
+    }
+    form
+    {
+        margin: auto;
+        text-align: center;
+        container: center;
+        padding-top: 50px;
+        border: 3px solid black;
+    }
+    button
+    {
+
+        color: red;
+        margin: 15px 32px;
+    }
+
+
+
+</style>
+<body>
+<form method="GET" action="http://localhost:3000/user/login">
+
+<label>Username: </label>
+<input type="text" name="name" id="name" placeholder="Enter Username" required>
+<br>
+<label>Email: </label>
+<input type="email" name="email" id="email" placeholder="Enter Email" required>
+<br>
+<label>Password: </label>
+<input type="password" name="password" id="password" placeholder="Enter Password" required>
+<br>
+    <button type="submit">Submit</button>
+
+</form>
+
+
+<script>
+    document.querySelector("form").addEventListener("submit", function(event) {
+
+        const uname = document.getElementById('name').value;
+        const password = document.getElementById('password').value;
+        const email = document.getElementById('email').value;
+
+        if(!uname.includes("@" || !uname.endsWith(/d/)))
+        {
+            event.preventDefault();
+            alert("username should contain @ and ends with numeric")
+        }
+
+        else if(password.length < 6)
+        {
+            event.preventDefault();
+            alert("password should contain at least 6 characters")
+        }
+        else if(!email.endsWith("@ucp.edu.pk"))
+        {
+            event.preventDefault();
+            alert("email should BE VALID")
+        }
+
+    })
+</script>
+</body>
+
+
+<!--<footer>-->
+
+<!--    <table>-->
+<!--      <tr>contents</tr>-->
+<!--        <tr>-->
+<!--            <th>language</th>-->
+<!--            <th>version</th>-->
+<!--            <th>country</th>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>English</td>-->
+<!--            <td>v.3.2.1</td>-->
+<!--            <td>Pakistan</td>-->
+<!--        </tr>-->
+
+<!--    </table>-->
+<!--</footer>-->
+</html>

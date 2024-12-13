@@ -8,24 +8,28 @@ app.use(express.urlencoded({ extended: false }))
 const router = require('./routes/main_route.js');
 
 
+app.use(express.static(__dirname + '/views'));
 
-app.use('/', router);
+app.use('/lists', router);
 
-app.get('/' , (req, res) => {
-
-  res.redirect('/login')
-  console.log("redirected to login sucessfully")
+app.get('/' , (req, res) =>
+{
+  res.redirect('/home');
 })
 
-app.get("/login", (req, res) => {
-  res.status(200).json("Welcome to log-in page")
-  console.log("Welcome to the log-in-page :)")
-  res.render('login')
+app.get('/user/register', function(req, res ) {
+  res.sendFile(__dirname + '/views/signup.html');
+})
+
+app.get('/user/login', function(req, res) {
+  res.sendFile(__dirname + '/views/login.html');
 });
+
 
 app.get('/home' , (req, res) => {
 
   console.log("Welcome to the home-page :)")
+  res.send("HOMEPAGE ")
 })
 
 app.listen(port , ()=>
