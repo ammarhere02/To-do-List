@@ -62,6 +62,7 @@ const user = sequelizeConnect.define("user", {
     email:
         {
             type: DataTypes.STRING,
+            primaryKey: true ,
         },
     password:
         {
