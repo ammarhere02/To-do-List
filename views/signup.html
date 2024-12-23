@@ -3,107 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign-up</title>
-
-    <h1>Welcome to the task-tracker APP </h1>
-
-
+    <h1>Welcome to the task-tracker APP</h1>
 </head>
 
 <style>
-table, tr , th, td {
-    border: 5px solid black;
-}
-
-    body
-    {
+    body {
         background-color: lightpink;
     }
-    h1
-    {
+    h1 {
         text-align: center;
-        color:indianred;
+        color: indianred;
         text-end-overflow: ellipsis;
-
     }
-    form
-    {
+    form {
         margin: auto;
         text-align: center;
         container: center;
         padding-top: 50px;
         border: 3px solid black;
     }
-    button
-    {
-
+    button {
         color: red;
         margin: 15px 32px;
     }
-
-
-
 </style>
+
 <body>
-<form method="GET" action="http://localhost:3000/user/login">
-
-<label>Username: </label>
-<input type="text" name="name" id="name" placeholder="Enter Username" required>
-<br>
-<label>Email: </label>
-<input type="email" name="email" id="email" placeholder="Enter Email" required>
-<br>
-<label>Password: </label>
-<input type="password" name="password" id="password" placeholder="Enter Password" required>
-<br>
+<form method="POST" action="http://localhost:3000/user/login">
+    <label>Username: </label>
+    <input type="text" name="name" id="name" placeholder="Enter Username" required>
+    <br>
+    <label>Email: </label>
+    <input type="email" name="email" id="email" placeholder="Enter Email" required>
+    <br>
+    <label>Password: </label>
+    <input type="password" name="password" id="password" placeholder="Enter Password" required>
+    <br>
     <button type="submit">Submit</button>
-
 </form>
 
-
 <script>
-    document.querySelector("form").addEventListener("submit", function(event) {
+    const uname = document.getElementById('name');
+    const password = document.getElementById('password');
+    const email = document.getElementById('email');
 
-        const uname = document.getElementById('name').value;
-        const password = document.getElementById('password').value;
-        const email = document.getElementById('email').value;
+    document.querySelector("form").addEventListener("submit", async function(event) {
+        event.preventDefault();
 
-        if(!uname.includes("@" || !uname.endsWith(/d/)))
-        {
-            event.preventDefault();
-            alert("username should contain @ and ends with numeric")
+        const unameValue = uname.value;
+        const passwordValue = password.value;
+        const emailValue = email.value;
+
+        if (!unameValue.includes("@") || !/[0-9]$/.test(unameValue)) {
+            alert("Username should contain @ and end with a numeric value.");
+        } else if (passwordValue.length < 6) {
+            alert("Password should contain at least 6 characters.");
+        } else if (!emailValue.endsWith("@ucp.edu.pk")) {
+            alert("Email should be valid and end with @ucp.edu.pk.");
+        } else {
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: unameValue,
+                        email: emailValue,
+                        password: passwordValue,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    console.log("Success in fetching");
+                } else {
+                    console.error("Failed to fetch");
+                }
+            } catch (err) {
+                console.error("Caught error in fetching: " + err);
+            }
         }
-
-        else if(password.length < 6)
-        {
-            event.preventDefault();
-            alert("password should contain at least 6 characters")
-        }
-        else if(!email.endsWith("@ucp.edu.pk"))
-        {
-            event.preventDefault();
-            alert("email should BE VALID")
-        }
-
-    })
+    });
 </script>
 </body>
-
-
-<!--<footer>-->
-
-<!--    <table>-->
-<!--      <tr>contents</tr>-->
-<!--        <tr>-->
-<!--            <th>language</th>-->
-<!--            <th>version</th>-->
-<!--            <th>country</th>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td>English</td>-->
-<!--            <td>v.3.2.1</td>-->
-<!--            <td>Pakistan</td>-->
-<!--        </tr>-->
-
-<!--    </table>-->
-<!--</footer>-->
 </html>

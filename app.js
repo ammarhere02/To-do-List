@@ -2,19 +2,17 @@ const express = require('express');
 
 const app = express();
 app.use(express.json());
-
 const port = process.env.PORT || 3000;
-app.use(express.urlencoded({ extended: false }))
+
+app.use(express.urlencoded({ extended: true }))
 const router = require('./routes/main_route.js');
+
+
+
 
 app.use(express.static(__dirname + '/views'));
 
 app.use('/', router);
-
-app.get('/' , (req, res) =>
-{
-  res.redirect('/home');
-})
 
 app.get('/register', function(req, res ) {
   res.sendFile(__dirname + '/views/signup.html');
