@@ -1,5 +1,4 @@
 const express = require('express');
-
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
@@ -7,12 +6,11 @@ const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }))
 const router = require('./routes/main_route.js');
 
-
-
-
 app.use(express.static(__dirname + '/views'));
 
-app.use('/', router);
+app.use('/api/user', router);
+
+
 
 app.get('/register', function(req, res ) {
   res.sendFile(__dirname + '/views/signup.html');

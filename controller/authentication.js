@@ -6,30 +6,18 @@ const {user} = require('../models/seeders/seeders');
 
 const signUp = async (req, res) =>
 {
-    const {name , email , password} = req.body
-
+    const {name , email , password}  = req.body
     const hash = await bcrypt.hash(password, 10);
-     await user.create({name , email ,  password: hash})
-
-;
-
-    const token = jwt.sign({name, email}, secretKey, {expiresIn: "1h"});
-
-    await jwt.verify(token, secretKey, (err) => {
-        if (err) {
-            res.status(401).send({error: "Authentication Error"});
-        }
-        else
-        {
-            console.log(token)
-            res.status(201).json("user created AND verified successfully" , token);
-        }
-
-    })
+    const newUser = await user.create({name , email  ,  password: hash})
+    console.log(newUser)
+    const token = jwt.sign({email : newUser.email}, secretKey, {expiresIn: "1h"});
+    console.log(token);
+    return res.status(200).json({message: "User successfully signed up" , "token" : token});
 
 }
 const signIn = async (req, res) =>
 {
+
     try {
 
         const {email , password} = req.body
@@ -38,7 +26,7 @@ const signIn = async (req, res) =>
         })
         if (!checkUser) {
 
-            res.send({error: "User not found"});
+          return  res.status(401).json({error: "User not found"});
         }
 
         console.log("user found")
@@ -48,18 +36,34 @@ const signIn = async (req, res) =>
         const validPass = await bcrypt.compare(password , checkUser.password)
         if (!validPass) {
 
-            res.status(401).send({error: "password not match"});
+           return res.status(401).json({error: "password not match"});
         }
         else
         {
             console.log("password matched")
 
-            const token = jwt.sign({email : email}, secretKey, {expiresIn: "1h"});
-            console.log(token)
+            const token = jwt.sign({email : email , roles: checkUser.roles}, secretKey, {expiresIn: "1h"});
             console.log("login verification successfull")
-            return res.status(200).json({"success": true, token});
-        }
+            res.status(200).json({"success": true, token});
+            console.log(token)
 
+        }
+        module.exports = function verifyToken(token)
+        {
+            const verify = jwt.verify(token, secretKey);
+
+            if(!verify)
+            {
+                console.log("token not verified");
+            }
+            else
+            {
+                const userData = {email: verify.email};
+
+                console.log("Token verified successfully" , userData)
+
+            }
+        }
 
     }
     catch (e) {
@@ -71,5 +75,4 @@ const signIn = async (req, res) =>
 }
 
 
-module.exports = {signUp , signIn};
-
+module.exports = {signUp , signIn };
