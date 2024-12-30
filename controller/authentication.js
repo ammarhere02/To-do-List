@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const secretKey = "$ammarkhan9090";
+const dotenv = require("dotenv");
+dotenv.config();
+const secretKey = process.env.SECRETKEY;
 const {user} = require('../models/seeders/seeders');
 
 
@@ -8,7 +10,7 @@ const signUp = async (req, res) =>
 {
     const {name , email , password}  = req.body
     const hash = await bcrypt.hash(password, 10);
-    const newUser = await user.create({name , email  ,  password: hash})
+    const newUser = await user.create({name , email  , password: hash})
     console.log(newUser)
     const token = jwt.sign({email : newUser.email}, secretKey, {expiresIn: "1h"});
     console.log(token);
@@ -42,7 +44,7 @@ const signIn = async (req, res) =>
         {
             console.log("password matched")
 
-            const token = jwt.sign({email : email , roles: checkUser.roles}, secretKey, {expiresIn: "1h"});
+            const token = jwt.sign({email : email , role: checkUser.role}, secretKey, {expiresIn: "1m"});
             console.log("login verification successfull")
             res.status(200).json({"success": true, token});
             console.log(token)

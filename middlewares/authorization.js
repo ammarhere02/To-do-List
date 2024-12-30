@@ -1,10 +1,7 @@
 const jwt = require('jsonwebtoken');
-const secretKey = "$ammarkhan9090";
-// const {roless}  = require('../middlewares/authorization')
-
-//thinking to import the roles after the permission is set in database then use that role
-//in restricting and us the function in routing of both login(of user and admin route) after authorization middleware
-
+const dotenv = require("dotenv");
+dotenv.config();
+const secretKey = process.env.SECRETKEY;
 
 
  function authorization(req, res, next) {
@@ -19,7 +16,7 @@ const secretKey = "$ammarkhan9090";
         if(authHeader && authHeader.startsWith("Bearer"))
         {
             const token = authHeader.split(" ")[1]
-            const verifyToken = jwt.verify(token , secretKey)
+            const verifyToken = jwt.verify(token , secretKey  ,{expiresIn: "1h"});
             req.user = verifyToken;
             console.log('The user is',verifyToken)
             next()
@@ -36,10 +33,9 @@ const secretKey = "$ammarkhan9090";
 
 }
 
-module.exports = {authorization};
 
 
-
+module.exports = {authorization };
 
 
 
