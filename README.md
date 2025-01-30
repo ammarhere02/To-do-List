@@ -25,4 +25,4 @@ Contains middleware functions for authorization and user restriction. These func
 routes/
 Defines all the API routes for the application. This includes routes for user authentication (register, login) and task management (create, read, update, delete tasks).
 
-You can access the live version of the project here: https://github.com/ammarhere02/To-do-List.git
+You can access the live version of the project here: https://roadmap.sh/projects/todo-list-api
